@@ -186,6 +186,21 @@ export function sites({ mockAuth = true } = {}): Plugin {
           recursive: true,
         });
       }
+
+      const wranglerJson = resolve(root, "dist", "server", "wrangler.json");
+      if (await exists(wranglerJson)) {
+        try {
+          const { readFile, writeFile } = await import("node:fs/promises");
+          const config = JSON.parse(await readFile(wranglerJson, "utf8"));
+          if (Array.isArray(config.compatibility_flags)) {
+            config.compatibility_flags = [...new Set(config.compatibility_flags)];
+          }
+          if (config.name) {
+            config.name = "alex-panel-portal";
+          }
+          await writeFile(wranglerJson, JSON.stringify(config, null, 2), "utf8");
+        } catch {}
+      }
     },
   };
 }

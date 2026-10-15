@@ -18,7 +18,7 @@ export default defineConfig(async ({ command }) => {
   const isServe = command === "serve";
   const localBindingConfig = {
     main: "./build/sites-worker.ts",
-    compatibility_flags: ["nodejs_compat"],
+    compatibility_flags: [] as string[],
     d1_databases: isServe && d1
       ? [
           {
