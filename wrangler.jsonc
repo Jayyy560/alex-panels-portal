@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "alex-panels-portal",
+  "main": "./build/sites-worker.ts",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "alex-panels-db",
+      "database_id": "fcda053c-096a-4fe7-87ec-432a036640f2"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "alex-panels-photos"
+    }
+  ]
+}
