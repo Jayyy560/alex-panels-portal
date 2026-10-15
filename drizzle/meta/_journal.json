@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792000513329,
+      "tag": "0000_wonderful_fallen_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792002050952,
+      "tag": "0001_new_wraith",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792018214020,
+      "tag": "0002_wealthy_justin_hammer",
+      "breakpoints": true
+    }
+  ]
+}

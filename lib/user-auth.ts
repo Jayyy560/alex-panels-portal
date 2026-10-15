@@ -1,0 +1,6 @@
+import {env} from 'cloudflare:workers';import {cookies} from 'next/headers';import {digest,hex} from './admin-auth';import type {TeamUser} from './tracking-model';
+export const USER_COOKIE='alex_user_session';
+export async function getUser():Promise<TeamUser|null>{const token=(await cookies()).get(USER_COOKIE)?.value;if(!token||!/^[a-f0-9]{64}$/.test(token))return null;return env.DB!.prepare('SELECT u.id,u.username,u.name,u.kind,u.email,u.phone,u.active,u.created FROM team_users u JOIN user_sessions s ON s.user_id=u.id WHERE s.token_hash=? AND s.expires>? AND u.active=1').bind(await digest(token),Date.now()).first<TeamUser>()}
+export async function hashPassword(password:string,salt:string){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);return hex(await crypto.subtle.deriveBits({name:'PBKDF2',salt:Uint8Array.from(salt.match(/.{2}/g)!,x=>parseInt(x,16)),iterations:100000,hash:'SHA-256'},key,256))}
+export async function generateCredentials(){const password='Alex-'+hex(crypto.getRandomValues(new Uint8Array(9)).buffer);const salt=hex(crypto.getRandomValues(new Uint8Array(16)).buffer);return {password,salt,hash:await hashPassword(password,salt)}}
+export function equal(a:string,b:string){let v=a.length^b.length;for(let i=0;i<a.length;i++)v|=a.charCodeAt(i)^b.charCodeAt(i);return v===0}
