@@ -1,0 +1,1 @@
+ALTER TABLE `team_users` ADD `password_cipher` text;

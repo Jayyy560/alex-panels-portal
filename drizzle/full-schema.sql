@@ -55,6 +55,7 @@ CREATE TABLE `team_users` (
 	`phone` text NOT NULL,
 	`password_hash` text NOT NULL,
 	`password_salt` text NOT NULL,
+	`password_cipher` text,
 	`active` integer DEFAULT 1 NOT NULL,
 	`created` text NOT NULL
 );
