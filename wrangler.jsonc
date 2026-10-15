@@ -10,11 +10,5 @@
       "database_name": "alex-panels-db",
       "database_id": "fcda053c-096a-4fe7-87ec-432a036640f2"
     }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "BUCKET",
-      "bucket_name": "alex-panels-photos"
-    }
   ]
 }

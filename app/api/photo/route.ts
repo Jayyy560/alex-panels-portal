@@ -1,2 +1,23 @@
-import {env} from 'cloudflare:workers';import {isAdmin} from '../../../lib/admin-auth';import {getUser} from '../../../lib/user-auth';
-export async function GET(req:Request){const admin=await isAdmin(),user=await getUser();if(!admin&&!user)return new Response('Sign in required',{status:401});const id=new URL(req.url).searchParams.get('id');const row=await env.DB!.prepare('SELECT photo_key,user_id FROM distributions WHERE id=?').bind(id||'').first<{photo_key:string;user_id:string}>();if(!row||(!admin&&row.user_id!==user?.id)||!row.photo_key)return new Response('Not found',{status:404});const file=await env.BUCKET!.get(row.photo_key);if(!file)return new Response('Not found',{status:404});return new Response(file.body,{headers:{'Content-Type':file.httpMetadata?.contentType||'application/octet-stream','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Content-Disposition':'inline'}})}
+import {env} from 'cloudflare:workers';
+import {isAdmin} from '../../../lib/admin-auth';
+import {getUser} from '../../../lib/user-auth';
+
+export async function GET(req:Request){
+  const admin=await isAdmin(),user=await getUser();
+  if(!admin&&!user)return new Response('Sign in required',{status:401});
+  const id=new URL(req.url).searchParams.get('id');
+  const row=await env.DB!.prepare('SELECT photo_key,user_id FROM distributions WHERE id=?').bind(id||'').first<{photo_key:string;user_id:string}>();
+  if(!row||(!admin&&row.user_id!==user?.id)||!row.photo_key)return new Response('Not found',{status:404});
+
+  if(row.photo_key.startsWith('data:')){
+    const [header,b64]=row.photo_key.split(',');
+    const mime=header.match(/:(.*?);/)?.[1]||'image/jpeg';
+    const binary=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+    return new Response(binary,{headers:{'Content-Type':mime,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Content-Disposition':'inline'}});
+  }
+
+  if(!env.BUCKET)return new Response('Photo not found',{status:404});
+  const file=await env.BUCKET.get(row.photo_key);
+  if(!file)return new Response('Not found',{status:404});
+  return new Response(file.body,{headers:{'Content-Type':file.httpMetadata?.contentType||'application/octet-stream','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Content-Disposition':'inline'}});
+}
