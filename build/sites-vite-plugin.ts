@@ -196,7 +196,7 @@ export function sites({ mockAuth = true } = {}): Plugin {
             config.compatibility_flags = [...new Set(config.compatibility_flags)];
           }
           if (config.name) {
-            config.name = "gifting-sample-portal";
+            config.name = "gifting-and-sample-portal";
           }
           await writeFile(wranglerJson, JSON.stringify(config, null, 2), "utf8");
         } catch {}
