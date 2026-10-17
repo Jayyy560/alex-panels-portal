@@ -1,2 +1,2 @@
-import Workspace from '../workspace';import AdminLogin from './login';import {isAdmin} from '../../lib/admin-auth';
-export const dynamic='force-dynamic';export default async function Page(){return await isAdmin()?<Workspace admin/>:<AdminLogin/>}
+import Workspace from '../workspace';import AdminLogin from './login';import {isAdmin} from '../../lib/admin-auth';import {normalizeCompany} from '../../lib/company';
+export const dynamic='force-dynamic';export default async function Page({searchParams}:{searchParams:Promise<{company?:string}>}){const q=await searchParams,company=normalizeCompany(q.company)||'alex';return await isAdmin()?<Workspace admin company={company}/>:<AdminLogin/>}
