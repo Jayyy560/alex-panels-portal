@@ -21,8 +21,8 @@ for (const filePath of candidates) {
         }
       }
 
-      if (data.name && data.name !== "alex-panel-portal") {
-        data.name = "alex-panel-portal";
+      if (data.name && data.name !== "gifting-sample-portal") {
+        data.name = "gifting-sample-portal";
         modified = true;
       }
 
